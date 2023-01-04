@@ -66,16 +66,9 @@ const Login = () => {
             onChange={handleChange}
             isInvalid={!!errors?.password}
             className={`form-control-solid`}
-            // className={!errors?.password && `form-control-solid`}
+          // className={!errors?.password && `form-control-solid`}
           />
           <Form.Control.Feedback type='invalid'>{errors?.password?.message}</Form.Control.Feedback>
-        </Form.Group>
-        <Form.Group as={Col} md="3" controlId="validationCustom05">
-          <Form.Label>Zip</Form.Label>
-          <Form.Control type="text" placeholder="Zip" required />
-          <Form.Control.Feedback type="invalid">
-            Please provide a valid zip.
-          </Form.Control.Feedback>
         </Form.Group>
       </div>
       <button

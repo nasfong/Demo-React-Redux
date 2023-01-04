@@ -15,7 +15,7 @@ function PrivateRoute() {
   return (
     <Suspense fallback={<>Loading...</>}>
       <Routes>
-        <Route index element={<Dashboard />} path='dashbord' />
+        <Route index element={<Dashboard />} path='dashboard' />
         <Route element={<TodoList />} path='todo-list' />
         <Route element={<Game />} path='game' />
         <Route element={<Menu />} path='menu' />
@@ -23,8 +23,8 @@ function PrivateRoute() {
 
         <Route element={<ErrorPage />} path='error/404' />
 
-        <Route path="" element={<Navigate to="/dashbord" replace />} />
-        <Route path="*" element={<Navigate to="/error/404" replace />} />
+        <Route path="/auth/login" element={<Navigate to="/dashboard" replace />} />
+        {/* <Route path="*" element={<Navigate to="/error/404" replace />} /> */}
       </Routes>
     </Suspense>
   )
