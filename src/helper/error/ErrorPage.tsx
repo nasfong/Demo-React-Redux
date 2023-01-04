@@ -6,7 +6,7 @@ export const ErrorPage = () => {
       <h1 className=''>
         Opps!
       </h1>
-      <Link to='/'>Go HomePage</Link>
+      <Link to='/'>Go HomePages</Link>
 
     </div>
   )
