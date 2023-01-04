@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { GlobalStateProvider } from "./helper";
 import MenuAside from "./layout/menu/MenuAside";
 import PrivateRoute from "./routes/PrivateRoute";
-import { BrowserRouter } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 import Content from "./layout/content/Content";
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { RootState } from "./helper/redux/RootReducer";
@@ -28,7 +28,7 @@ function App() {
 
 
   return (
-    <BrowserRouter>
+    <HashRouter >
       {!user ?
         <>
           <AuthPage />
@@ -42,7 +42,7 @@ function App() {
           </MenuAside>
         </GlobalStateProvider>
       }
-    </BrowserRouter>
+    </HashRouter >
   )
 
 }

@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes, } from 'react-router-dom'
 import { lazy, Suspense } from 'react'
+import { ErrorPage } from '../helper'
 
 
 
@@ -20,10 +21,10 @@ function PrivateRoute() {
         <Route element={<Menu />} path='menu' />
         <Route element={<Administrator />} path='administrator' />
 
-        <Route
-          path="*"
-          element={<Navigate to="/dashbord" replace />}
-        />
+        <Route element={<ErrorPage />} path='error/404' />
+
+        <Route path="" element={<Navigate to="/dashbord" replace />} />
+        <Route path="*" element={<Navigate to="/error/404" replace />} />
       </Routes>
     </Suspense>
   )
