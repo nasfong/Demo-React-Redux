@@ -1,8 +1,0 @@
-@use "sass:map";
-@function theme-light-color($key: 'primary') {
-  @return map.get($theme-light-colors, $key);
-};
-
-@function isDarkMode() {
-  @return false
-};
