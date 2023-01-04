@@ -1,0 +1,78 @@
+// @function isDarkMode() {
+//   @return false
+// }
+
+$white: if(isDarkMode(), #000000, #ffffff) !default;
+$dark: if(isDarkMode(), #ffffff, #000000) !default;
+$gray-100: if(isDarkMode(), #1b1b29, #f5f8fa) !default;
+$gray-200: if(isDarkMode(), #2b2b40, #eff2f5) !default;
+$gray-300: if(isDarkMode(), #323248, #e4e6ef) !default;
+$gray-400: if(isDarkMode(), #474761, #b5b5c3) !default;
+$gray-500: if(isDarkMode(), #565674, #a1a5b7) !default;
+$gray-600: if(isDarkMode(), #6d6d80, #7e8299) !default;
+$gray-700: if(isDarkMode(), #92929f, #5e6278) !default;
+$gray-800: if(isDarkMode(), #cdcdde, #3f4254) !default;
+$gray-900: if(isDarkMode(), #ffffff, #181c32) !default;
+
+// Secondary colors
+$secondary: $gray-300 !default;
+$secondary-active: $gray-400 !default;
+$secondary-light: $gray-100 !default;
+$secondary-inverse: $gray-800 !default;
+
+$primary: if(isDarkMode(), #2066ac, #009ef7);
+$primary-active: if(isDarkMode(), #187de4, #0095e8);
+$primary-light: if(isDarkMode(), #212e48, #e1f4ff);
+$primary-inverse: #ffffff;
+
+// Success
+$success: if(isDarkMode(), #0bb783, #50cd89);
+$success-active: if(isDarkMode(), #04aa77, #47be7d);
+$success-light: if(isDarkMode(), #1c3238, #e4fff1);
+$success-inverse: #ffffff;
+
+// Info
+$info: if(isDarkMode(), #8950fc, #7239ea);
+$info-active: if(isDarkMode(), #7337ee, #5014d0);
+$info-light: if(isDarkMode(), #2f264f, #ece4ff);
+$info-inverse: #ffffff;
+
+// Danger
+$danger: if(isDarkMode(), #f64e60, #f1416c);
+$danger-active: if(isDarkMode(), #ee2d41, #d9214e);
+$danger-light: if(isDarkMode(), #3a2434, #ffe7ee);
+$danger-inverse: #ffffff;
+
+// Warning
+$warning: if(isDarkMode(), #ffa800, #ffc700);
+$warning-active: if(isDarkMode(), #ee9d01, #f1bc00);
+$warning-light: if(isDarkMode(), #392f28, #fff9e1);
+$warning-inverse: #ffffff;
+
+// Border Radiues
+$border-radius-sm: .3rem;
+$border-radius: .65rem;
+$border-radius-lg: .85rem;
+$border-radius-xl: 1.25rem;
+
+// Card Box Shadow
+$card-box-shadow: 0px 0px 20px 0px rgba(76, 87, 125, 0.02);
+
+$theme-light-colors: (
+  'primary': $primary-light,
+  'success': $success-light,
+  'info': $info-light,
+  'warning': $warning-light,
+  'danger': $danger-light,
+  // 'dark': $dark-light,
+  ) !default;
+
+$theme-color: (
+  'primary': $primary,
+  'success': $success,
+  'info': $info,
+  'warning': $warning,
+  'danger': $danger,
+  ) !default;
+
+  
