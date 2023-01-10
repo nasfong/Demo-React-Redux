@@ -8,32 +8,27 @@ import useOnceCall from '../../util/UseOnecall'
 
 interface TodoListType {
   _id: string
-  username: string
-  firstname: string
-  lastname: string
-  role: {
+  name: string
+  role: [{
     _id: string
     name: string
-  }
-  password: string
+  }]
 }
 
-const api_url = 'administrator'
+const api_url = 'permission'
 
-function Administrator() {
+function Permission() {
   const { pathname } = useLocation()
 
+  const [errors, setErrors] = useState() as any
+  const [isSubmit, setIsSubmit] = useState(false)
 
   const initialState = {
     _id: '',
-    username: '',
-    firstname: '',
-    role: '',
-    lastname: '',
-    password: ''
+    name: '',
+    role: []
   }
-  const [formInput, setFormInput] = useState(initialState)
-  const [errors, setErrors] = useState() as any
+  const [formInput, setFormInput] = useState(initialState) as any
   const [todoLists, setTodoLists] = useState<TodoListType[]>([])
   const [roleDropdown, setRoleDropdown] = useState([])
 
@@ -47,11 +42,15 @@ function Administrator() {
     setErrors()
   }
 
-  useEffect(() => {
+  const dataFetch = async () => {
     axios
       .get(`/${api_url}`)
       .then(resp => setTodoLists(resp.data.data))
       .catch((err) => console.log(err.message))
+  }
+
+  useEffect(() => {
+    dataFetch()
   }, [])
 
   useOnceCall(() => {
@@ -66,6 +65,12 @@ function Administrator() {
     setFormInput({ ...formInput, [name]: value })
   }
 
+  const handleChangeSelectMulti = (e: any) => {
+    setErrors({})
+    let value = Array.from(e.target.selectedOptions, (option: any) => option.value)
+    setFormInput({ ...formInput, role: value })
+  }
+
   const handleDelete = async (id: string) => {
     await axios
       .delete(`/${api_url}/${id}`)
@@ -76,18 +81,21 @@ function Administrator() {
       })
       .catch(e => console.log(e))
   }
-  
+
   const handleSubmit = async () => {
+    setIsSubmit(true)
     if (formInput._id) {
       await axios
         .put(`/${api_url}/${formInput._id}`, formInput)
         .then((resp) => {
           if (resp.status === 200) {
-            setTodoLists(todoLists.map((todo) => todo._id === formInput._id ? resp.data.data : todo))
+            // setTodoLists(todoLists.map((todo) => todo._id === formInput._id ? resp.data.data : todo))
+            dataFetch()
             handleCloseModal()
           } else if (resp.status === 201) {
             setErrors(resp.data.data)
           }
+          setIsSubmit(false)
         })
         .catch((e) => console.log(e))
     } else {
@@ -95,16 +103,20 @@ function Administrator() {
         .post(`/${api_url}`, formInput)
         .then((resp) => {
           if (resp.status === 200) {
-            setTodoLists(todoLists.concat(resp.data.data))
+            // setTodoLists(todoLists.concat(resp.data.data))
+            dataFetch()
             handleCloseModal()
           } else if (resp.status === 201) {
             setErrors(resp.data.data)
           }
+          setIsSubmit(false)
         })
         .catch(error => console.log(error.message))
     }
   }
+  // console.log(todoLists)
 
+  console.log(formInput)
   return (
     <>
       <Toolbar>
@@ -124,7 +136,7 @@ function Administrator() {
         <table className='table'>
           <thead className='text-muted'>
             <tr>
-              <th>Info</th>
+              <th>Name</th>
               <th>Role</th>
               <th className='text-end'>Action</th>
             </tr>
@@ -132,12 +144,13 @@ function Administrator() {
           <tbody className='text-muted'>
             {todoLists.map((todo, index) => (
               <tr key={todo._id}>
-
-                <td>{todo.firstname} {todo.lastname}</td>
+                <td>{todo.name}</td>
                 <td>
-                  <span className='badge badge-light-primary'>
-                    {todo.role?.name}
-                  </span>
+                  {todo.role.map((roles, index) => (
+                    <span key={index} className='badge badge-light-info'>
+                      {roles.name}
+                    </span>
+                  ))}
                 </td>
                 <td className='text-end'>
                   <button
@@ -146,10 +159,8 @@ function Administrator() {
                       setFormInput({
                         ...formInput,
                         _id: todo._id,
-                        firstname: todo.firstname,
-                        lastname: todo.lastname,
-                        role: todo.role?._id,
-                        username: todo.username,
+                        name: todo.name,
+                        role: todo.role.map((value) => value._id)
                       })
                       handleOpenModal()
                     }}>
@@ -180,38 +191,19 @@ function Administrator() {
           <Modal.Body>
             <Form.Group as={Row} className='mb-3'>
               <Form.Label column lg='3' className='required'>
-                Fisrt Name
+                Name
               </Form.Label>
               <Col lg='9' className='fv-row'>
                 <Form.Control
                   type='text'
-                  name='firstname'
-                  defaultValue={formInput.firstname}
+                  name='name'
+                  defaultValue={formInput.name}
                   onChange={handleChange}
-                  isInvalid={!!errors?.firstname}
-                  // className={!errors?.firstname && `form-control-solid`}
+                  isInvalid={!!errors?.name}
                   className={`form-control-solid`}
-                  placeholder='first-name'
+                  placeholder='name'
                 />
-                <Form.Control.Feedback type='invalid'>{errors?.firstname?.message}</Form.Control.Feedback>
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row} className='mb-3'>
-              <Form.Label column lg='3' className='required'>
-                Last Name
-              </Form.Label>
-              <Col lg='9' className='fv-row'>
-                <Form.Control
-                  type='text'
-                  name='lastname'
-                  defaultValue={formInput.lastname}
-                  onChange={handleChange}
-                  isInvalid={!!errors?.lastname}
-                  // className={!errors?.lastname && `form-control-solid`}
-                  className={`form-control-solid`}
-                  placeholder='lastname'
-                />
-                <Form.Control.Feedback type='invalid'>{errors?.lastname?.message}</Form.Control.Feedback>
+                <Form.Control.Feedback type='invalid'>{errors?.name?.message}</Form.Control.Feedback>
               </Col>
             </Form.Group>
             <Form.Group as={Row} className='mb-6'>
@@ -222,11 +214,11 @@ function Administrator() {
                 <Form.Select
                   name='role'
                   value={formInput.role}
-                  onChange={handleChange}
+                  onChange={handleChangeSelectMulti}
                   isInvalid={!!errors?.role}
                   className={`form-select-solid`}
+                  multiple={true}
                 >
-                  <option>Open select role</option>
                   {Object.entries(roleDropdown).map(([key, value]) => (
                     <option key={key} value={key}>
                       {value}
@@ -236,50 +228,17 @@ function Administrator() {
                 <Form.Control.Feedback type='invalid'>{errors?.role?.message}</Form.Control.Feedback>
               </Col>
             </Form.Group>
-            <Form.Group as={Row} className='mb-3'>
-              <Form.Label column lg='3' className='required'>
-                Usernmae
-              </Form.Label>
-              <Col lg='9' className='fv-row'>
-                <Form.Control
-                  type='text'
-                  name='username'
-                  defaultValue={formInput.username}
-                  onChange={handleChange}
-                  isInvalid={!!errors?.username}
-                  // className={!errors?.username && `form-control-solid`}
-                  className={`form-control-solid`}
-                  placeholder='username'
-                />
-                <Form.Control.Feedback type='invalid'>{errors?.username?.message}</Form.Control.Feedback>
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row} className='mb-3'>
-              <Form.Label column lg='3' className='required'>
-                Password
-              </Form.Label>
-              <Col lg='9' className='fv-row'>
-                <Form.Control
-                  type='text'
-                  name='password'
-                  defaultValue={formInput.password}
-                  onChange={handleChange}
-                  isInvalid={!!errors?.password}
-                  // className={!errors?.password && `form-control-solid`}
-                  className={`form-control-solid`}
-                  placeholder='password'
-                />
-                <Form.Control.Feedback type='invalid'>{errors?.password?.message}</Form.Control.Feedback>
-              </Col>
-            </Form.Group>
-
           </Modal.Body>
           <Modal.Footer>
             <button
               className='btn btn-primary'
               onClick={handleSubmit}
+              disabled={isSubmit}
             >
-              {formInput._id ? 'Update' : 'Save'}
+              {formInput._id ? 'Update' : 'Save'} {' '}
+              {isSubmit &&
+                <div className="spinner-border text-light h-20px w-20px" />
+              }
             </button>
           </Modal.Footer>
         </Modal>
@@ -289,5 +248,5 @@ function Administrator() {
   )
 }
 
-export default Administrator
+export default Permission
 

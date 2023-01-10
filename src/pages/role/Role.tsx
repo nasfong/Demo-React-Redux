@@ -4,24 +4,25 @@ import { Modal, Row, Form, Col } from 'react-bootstrap'
 import Toolbar from '../../helper/tool/Toolbar'
 import { PageName } from '../../helper/tool/PageName'
 import { useLocation } from 'react-router-dom'
-import { ActionKind, GlobalState, useGlobal } from '../../helper'
-import { type } from 'os'
 
 interface TodoListType {
-  _id: number
+  _id: string
   name: string
-  url: string
-  icon: string
+  permission: [{
+    _id: string
+    name: string
+  }]
 }
 
-function Menu() {
+const color = ['primary', 'danger', 'warning', 'info']
+
+const api_url = 'role'
+
+function Role() {
   const { pathname } = useLocation()
-  const { dispatch } = useGlobal() as ReturnType<typeof GlobalState>
 
   const initialState = {
     name: '',
-    url: '',
-    icon: ''
   }
   const [formInput, setFormInput] = useState(initialState) as any
   const [todoLists, setTodoLists] = useState<TodoListType[]>([])
@@ -38,12 +39,17 @@ function Menu() {
     setErrors()
   }
 
-  useEffect(() => {
+  const dataFetch = async () => {
     axios
-      .get('/menu')
+      .get(`/${api_url}`)
       .then(resp => setTodoLists(resp.data.data))
       .catch((err) => console.log(err.message))
+  }
+
+  useEffect(() => {
+    dataFetch()
   }, [])
+  console.log(formInput)
 
   const handleChange = (e: any) => {
     setErrors()
@@ -51,13 +57,12 @@ function Menu() {
     setFormInput({ ...formInput, [name]: value })
   }
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     await axios
-      .delete(`/menu/${id}`)
+      .delete(`/${api_url}/${id}`)
       .then((resp) => {
         if (resp.status === 200) {
           setTodoLists(todoLists.filter((todo) => todo._id !== id))
-          dispatch({ type: ActionKind.MENU, payload: todoLists.filter((todo) => todo._id !== id) })
         }
       })
       .catch(e => console.log(e))
@@ -67,11 +72,11 @@ function Menu() {
     setIsSubmit(true)
     if (formInput._id) {
       await axios
-        .put(`/menu/${formInput._id}`, formInput)
+        .put(`/${api_url}/${formInput._id}`, formInput)
         .then((resp) => {
           if (resp.status === 200) {
-            setTodoLists(todoLists.map((todo) => todo._id === formInput._id ? resp.data.data : todo))
-            dispatch({ type: ActionKind.MENU, payload: todoLists.map((todo) => todo._id === formInput._id ? resp.data.data : todo) })
+            // setTodoLists(todoLists.map((todo) => todo._id === formInput._id ? resp.data.data : todo))
+            dataFetch()
             handleCloseModal()
           } else if (resp.status === 201) {
             setErrors(resp.data.data)
@@ -81,11 +86,11 @@ function Menu() {
         .catch((e) => console.log(e))
     } else {
       await axios
-        .post('/menu', formInput)
+        .post(`/${api_url}`, formInput)
         .then((resp) => {
           if (resp.status === 200) {
-            setTodoLists(todoLists.concat(resp.data.data))
-            dispatch({ type: ActionKind.MENU, payload: todoLists.concat(resp.data.data) })
+            dataFetch()
+            // setTodoLists(todoLists.concat(resp.data.data))
             handleCloseModal()
           } else if (resp.status === 201) {
             setErrors(resp.data.data)
@@ -111,48 +116,40 @@ function Menu() {
 
         </div>
       </Toolbar>
-      <div className='card'>
-        <table className='table'>
-          <thead className='text-muted'>
-            <tr>
-              <th>Name</th>
-              <th>Url</th>
-              <th>Icon</th>
-              <th className='text-end'>Action</th>
-            </tr>
-          </thead>
-          <tbody className='text-muted'>
-            {todoLists.map((todo, index) => (
-              <tr key={todo._id}>
-                <td>{todo.name}</td>
-                <td>{todo.url}</td>
-                <td>{todo.icon}</td>
-                <td className='text-end'>
-                  <button
-                    className='btn-icon-primary'
-                    onClick={() => {
-                      setFormInput({
-                        ...formInput,
-                        _id: todo._id,
-                        name: todo.name,
-                        url: todo.url,
-                        icon: todo.icon
-                      })
-                      handleOpenModal()
-                    }}>
-                    <i className="fa-solid fa-pen"></i>
-                  </button>
-                  <button
-                    className='btn-icon-primary'
-                    onClick={() => handleDelete(todo._id)}
-                  >
-                    <i className="fa-solid fa-trash"></i>
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className='colunm-auto-150px'>
+        {todoLists.map((todo, index) => (
+          <div key={todo._id} className='card card-body'>
+            <div className='fs-5'>{todo.name}</div>
+            <div className='my-10'>
+              {todo.permission.map((roles, index) => (
+                <div key={index} className="blockquote-footer">
+                  {roles.name}
+                </div>
+              ))}
+            </div>
+            <div>
+              <button
+                className='btn btn-light-primary btn-sm'
+                onClick={() => {
+                  setFormInput({
+                    ...formInput,
+                    _id: todo._id,
+                    name: todo.name,
+                  })
+                  handleOpenModal()
+                }}>
+                Edit
+              </button>
+              <button
+                className='btn btn-light-danger btn-sm'
+                onClick={() => handleDelete(todo._id)}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        ))}
+
 
         <Modal show={modal} onHide={handleCloseModal} size='lg'>
           <Modal.Header>
@@ -176,47 +173,10 @@ function Menu() {
                   defaultValue={formInput.name}
                   onChange={handleChange}
                   isInvalid={!!errors?.name}
-                  // className={!errors?.name && `form-control-solid`}
                   className={`form-control-solid`}
-                  placeholder='Todo-name'
+                  placeholder='name'
                 />
                 <Form.Control.Feedback type='invalid'>{errors?.name?.message}</Form.Control.Feedback>
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row} className='mb-3'>
-              <Form.Label column lg='3' className='required'>
-                Url
-              </Form.Label>
-              <Col lg='9' className='fv-row'>
-                <Form.Control
-                  type='text'
-                  name='url'
-                  defaultValue={formInput.url}
-                  onChange={handleChange}
-                  isInvalid={!!errors?.url}
-                  // className={!errors?.url && `form-control-solid`}
-                  className={`form-control-solid`}
-                  placeholder='url'
-                />
-                <Form.Control.Feedback type='invalid'>{errors?.url?.message}</Form.Control.Feedback>
-              </Col>
-            </Form.Group>
-            <Form.Group as={Row} className='mb-3'>
-              <Form.Label column lg='3' className='required'>
-                Icon
-              </Form.Label>
-              <Col lg='9' className='fv-row'>
-                <Form.Control
-                  type='text'
-                  name='icon'
-                  defaultValue={formInput.icon}
-                  onChange={handleChange}
-                  isInvalid={!!errors?.icon}
-                  // className={!errors?.icon && `form-control-solid`}
-                  className={`form-control-solid`}
-                  placeholder='icon'
-                />
-                <Form.Control.Feedback type='invalid'>{errors?.icon?.message}</Form.Control.Feedback>
               </Col>
             </Form.Group>
 
@@ -240,5 +200,5 @@ function Menu() {
   )
 }
 
-export default Menu
+export default Role
 

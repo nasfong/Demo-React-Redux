@@ -74,10 +74,22 @@
   aspect-ratio: 1.6;
   // object-fit: contain;
 }
+.colunm-auto-150px {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+}
 
-@media (width <= 990px) {
+.colunm-auto-50px {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 50px), 1fr));
+}
+
+@media (width <=990px) {
   .content-menu {
     transition: none;
     margin-left: 0;
   }
 }
+

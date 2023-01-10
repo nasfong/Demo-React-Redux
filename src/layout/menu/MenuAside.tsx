@@ -15,6 +15,10 @@ const MenuAside = ({ children }: { children: React.ReactNode }) => {
             <CgChevronDoubleLeftR className={`menu-arrow-menu ${sideMenu ? 'rotate-180' : 'active-arraow'}`} />
           </div>
         </div>
+        {/* <div>
+          <input type="checkbox" id="button" />
+          <label htmlFor="button" className="fas fa-bars"></label>
+        </div> */}
 
         <div className="scrollbox">
           <div className="scrollbox-inner">
@@ -23,7 +27,7 @@ const MenuAside = ({ children }: { children: React.ReactNode }) => {
                 <NavLink to={menu.url} className={({ isActive }) =>
                   isActive ? 'active link' : 'link'
                 }>
-                  <i className={menu.icon}></i>
+                  <div dangerouslySetInnerHTML={{ __html: menu.icon }} />
                   {menu.name}
                 </NavLink>
               </div>

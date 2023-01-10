@@ -12,7 +12,7 @@ import { State } from './helper/redux/AuthRedux';
 
 function App() {
 
-  const { user, accessToken } = useSelector<RootState>(({ auth }) => auth, shallowEqual) as State
+  const { user, accessToken } = useSelector<RootState>(({ auth }) => auth, shallowEqual) as State as any
 
   const dispatch = useDispatch()
   useEffect(() => {
