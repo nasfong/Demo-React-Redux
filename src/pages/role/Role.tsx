@@ -14,8 +14,6 @@ interface TodoListType {
   }]
 }
 
-const color = ['primary', 'danger', 'warning', 'info']
-
 const api_url = 'role'
 
 function Role() {
@@ -49,7 +47,6 @@ function Role() {
   useEffect(() => {
     dataFetch()
   }, [])
-  console.log(formInput)
 
   const handleChange = (e: any) => {
     setErrors()

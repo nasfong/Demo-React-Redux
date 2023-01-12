@@ -28,7 +28,8 @@ function PrivateRoute() {
 
         <Route element={<ErrorPage />} path='error/404' />
         <Route path="/auth/login" element={<Navigate to="/dashboard" replace />} />
-        {/* <Route path="*" element={<Navigate to="/error/404" replace />} /> */}
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="*" element={<Navigate to="/error/404" replace />} />
       </Routes>
     </Suspense>
   )

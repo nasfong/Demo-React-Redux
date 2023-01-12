@@ -114,9 +114,7 @@ function Permission() {
         .catch(error => console.log(error.message))
     }
   }
-  // console.log(todoLists)
 
-  console.log(formInput)
   return (
     <>
       <Toolbar>

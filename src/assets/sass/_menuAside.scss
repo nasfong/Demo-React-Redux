@@ -26,6 +26,14 @@
   padding: 0 .5rem;
   transition: width 0.2s linear;
 
+  #logout {
+    // display: grid;
+    // grid-template-columns: max-content max-content;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: .5rem;
+  }
+
   &:hover {
     width: 250px;
     transition: all 0.5s ease;
@@ -82,9 +90,7 @@
     font-size: 32px;
     color: $dark;
     padding: 5px;
-    overflow: auto;
-    overflow-x: hidden;
-    overflow-y: hidden;
+    overflow: hidden;
     margin-bottom: 2rem;
 
     .logo {

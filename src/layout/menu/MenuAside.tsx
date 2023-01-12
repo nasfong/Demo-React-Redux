@@ -1,10 +1,12 @@
 import { NavLink, Outlet } from "react-router-dom"
 import { CgChevronDoubleLeftR } from 'react-icons/cg'
 import { ActionKind, GlobalState, useGlobal } from '../../helper/index'
+import { useDispatch } from "react-redux"
 
 const MenuAside = ({ children }: { children: React.ReactNode }) => {
 
   const { sideMenu, dispatch, menus } = useGlobal() as ReturnType<typeof GlobalState>
+  const dispatch1 = useDispatch()
 
   return (
     <div>
@@ -15,12 +17,7 @@ const MenuAside = ({ children }: { children: React.ReactNode }) => {
             <CgChevronDoubleLeftR className={`menu-arrow-menu ${sideMenu ? 'rotate-180' : 'active-arraow'}`} />
           </div>
         </div>
-        {/* <div>
-          <input type="checkbox" id="button" />
-          <label htmlFor="button" className="fas fa-bars"></label>
-        </div> */}
-
-        <div className="scrollbox">
+        <div className="scrollbox mb-auto">
           <div className="scrollbox-inner">
             {menus.map((menu) => (
               <div key={menu._id} className='menu-link'>
@@ -34,6 +31,13 @@ const MenuAside = ({ children }: { children: React.ReactNode }) => {
             ))}
           </div>
         </div>
+        <button
+          className='btn btn-light-primary'
+          id='logout'
+          onClick={() => dispatch1({ type: 'LOGOUT' })}
+        >
+          Logout
+        </button>
       </div>
 
       <div>
