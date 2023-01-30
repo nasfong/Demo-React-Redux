@@ -14,11 +14,11 @@ import { PersistGate } from 'redux-persist/integration/react'
 setupAxios(axios, store)
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <Provider store={store}>
       <PersistGate persistor={persistor} loading={<div>Loading...</div>}>
         <App />
       </PersistGate>
     </Provider>
-  </React.StrictMode>
+  // </React.StrictMode>
 )

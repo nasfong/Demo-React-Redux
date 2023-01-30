@@ -14,7 +14,6 @@ export const GlobalState = (): {
   dispatch: {} | any
   sideMenu: boolean
   menus: Menu[]
-  toolbar: any
 } => {
   const initialState = {
     sideMenu: true,
@@ -22,7 +21,7 @@ export const GlobalState = (): {
     toolbar: ''
   }
 
-  const [{ sideMenu, menus, toolbar }, dispatch] = useReducer(reducer, initialState)
+  const [{ sideMenu, menus }, dispatch] = useReducer(reducer, initialState)
 
   useEffect(() => {
     axios
@@ -33,7 +32,7 @@ export const GlobalState = (): {
   }, [])
 
 
-  return { dispatch, sideMenu, menus, toolbar }
+  return { dispatch, sideMenu, menus }
 }
 
 //DataContext

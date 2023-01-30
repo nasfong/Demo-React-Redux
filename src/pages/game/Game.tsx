@@ -176,7 +176,7 @@ const Game = () => {
   return (
     <div className=''>
       <Toolbar>
-        <div className='text-capitalize float-start'>
+        <div className='text-capitalize float-start fs-5 fw-bold'>
           {PageName(pathname)}
         </div>
         <div className='float-end'>

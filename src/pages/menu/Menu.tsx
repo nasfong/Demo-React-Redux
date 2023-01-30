@@ -5,7 +5,6 @@ import Toolbar from '../../helper/tool/Toolbar'
 import { PageName } from '../../helper/tool/PageName'
 import { useLocation } from 'react-router-dom'
 import { ActionKind, GlobalState, useGlobal } from '../../helper'
-import { type } from 'os'
 
 interface TodoListType {
   _id: number
@@ -27,6 +26,7 @@ function Menu() {
   const [todoLists, setTodoLists] = useState<TodoListType[]>([])
   const [errors, setErrors] = useState() as any
   const [isSubmit, setIsSubmit] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const [modal, setModal] = useState(false)
   const handleOpenModal = () => {
@@ -39,10 +39,12 @@ function Menu() {
   }
 
   useEffect(() => {
+    setIsLoading(true)
     axios
       .get('/menu')
       .then(resp => setTodoLists(resp.data.data))
       .catch((err) => console.log(err.message))
+      .finally(() => setIsLoading(false))
   }, [])
 
   const handleChange = (e: any) => {
@@ -99,7 +101,7 @@ function Menu() {
   return (
     <>
       <Toolbar>
-        <div className='text-capitalize float-start'>
+        <div className='text-capitalize float-start fs-5 fw-bold'>
           {PageName(pathname)}
         </div>
         <div className='float-end'>
@@ -122,35 +124,49 @@ function Menu() {
             </tr>
           </thead>
           <tbody className='text-muted'>
-            {todoLists.map((todo, index) => (
-              <tr key={todo._id}>
-                <td>{todo.name}</td>
-                <td>{todo.url}</td>
-                <td>{todo.icon}</td>
-                <td className='text-end'>
-                  <button
-                    className='btn-icon-primary'
-                    onClick={() => {
-                      setFormInput({
-                        ...formInput,
-                        _id: todo._id,
-                        name: todo.name,
-                        url: todo.url,
-                        icon: todo.icon
-                      })
-                      handleOpenModal()
-                    }}>
-                    <i className="fa-solid fa-pen"></i>
-                  </button>
-                  <button
-                    className='btn-icon-primary'
-                    onClick={() => handleDelete(todo._id)}
-                  >
-                    <i className="fa-solid fa-trash"></i>
-                  </button>
+            {isLoading ?
+              <tr>
+                <td colSpan={5}>
+                  <div className='text-center'>
+                    <div className="spinner-border text-primary h-30px w-30px" />
+                  </div>
                 </td>
               </tr>
-            ))}
+              :
+              todoLists.map((todo) => (
+                <tr key={todo._id}>
+                  <td>{todo.name}</td>
+                  <td>{todo.url}</td>
+                  <td>
+                    <div
+                      className={`icon`}
+                      dangerouslySetInnerHTML={{ __html: todo.icon }}
+                    />
+                  </td>
+                  <td className='text-end'>
+                    <button
+                      className='btn-icon-primary'
+                      onClick={() => {
+                        setFormInput({
+                          ...formInput,
+                          _id: todo._id,
+                          name: todo.name,
+                          url: todo.url,
+                          icon: todo.icon
+                        })
+                        handleOpenModal()
+                      }}>
+                      <i className="fa-solid fa-pen"></i>
+                    </button>
+                    <button
+                      className='btn-icon-primary'
+                      onClick={() => handleDelete(todo._id)}
+                    >
+                      <i className="fa-solid fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
 

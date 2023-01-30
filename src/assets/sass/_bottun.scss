@@ -6,7 +6,7 @@
   outline: none !important;
   border: 0 !important;
   font-weight: inherit !important;
-  padding: 8.15px 17.25px !important;
+  padding: 8.15px 16.25px !important;
   @extend %radius;
 
   &:hover {
@@ -15,7 +15,7 @@
 }
 
 .btn-sm {
-  padding: 6.15px 15.25px !important;
+  padding: 6.15px 12.25px !important;
 }
 
 
@@ -59,6 +59,10 @@ $value in $theme-color {
     &:hover {
       color: $value;
     }
+  }
+
+  .border-#{$name} {
+    border-color: $value !important;
   }
 }
 

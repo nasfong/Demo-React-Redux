@@ -31,6 +31,7 @@ function Permission() {
   const [formInput, setFormInput] = useState(initialState) as any
   const [todoLists, setTodoLists] = useState<TodoListType[]>([])
   const [roleDropdown, setRoleDropdown] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
 
   const [modal, setModal] = useState(false)
   const handleOpenModal = () => {
@@ -43,10 +44,12 @@ function Permission() {
   }
 
   const dataFetch = async () => {
+    setIsLoading(true)
     axios
       .get(`/${api_url}`)
       .then(resp => setTodoLists(resp.data.data))
       .catch((err) => console.log(err.message))
+      .finally(() => setIsLoading(false))
   }
 
   useEffect(() => {
@@ -118,7 +121,7 @@ function Permission() {
   return (
     <>
       <Toolbar>
-        <div className='text-capitalize float-start'>
+        <div className='text-capitalize float-start fs-5 fw-bold'>
           {PageName(pathname)}
         </div>
         <div className='float-end'>
@@ -140,39 +143,48 @@ function Permission() {
             </tr>
           </thead>
           <tbody className='text-muted'>
-            {todoLists.map((todo, index) => (
-              <tr key={todo._id}>
-                <td>{todo.name}</td>
-                <td>
-                  {todo.role.map((roles, index) => (
-                    <span key={index} className='badge badge-light-info'>
-                      {roles.name}
-                    </span>
-                  ))}
-                </td>
-                <td className='text-end'>
-                  <button
-                    className='btn-icon-primary'
-                    onClick={() => {
-                      setFormInput({
-                        ...formInput,
-                        _id: todo._id,
-                        name: todo.name,
-                        role: todo.role.map((value) => value._id)
-                      })
-                      handleOpenModal()
-                    }}>
-                    <i className="fa-solid fa-pen"></i>
-                  </button>
-                  <button
-                    className='btn-icon-primary'
-                    onClick={() => handleDelete(todo._id)}
-                  >
-                    <i className="fa-solid fa-trash"></i>
-                  </button>
+            {isLoading ?
+              <tr>
+                <td colSpan={5}>
+                  <div className='text-center'>
+                    <div className="spinner-border text-primary h-30px w-30px" />
+                  </div>
                 </td>
               </tr>
-            ))}
+              :
+              todoLists.map((todo, index) => (
+                <tr key={todo._id}>
+                  <td>{todo.name}</td>
+                  <td>
+                    {todo.role.map((roles, index) => (
+                      <span key={index} className='badge badge-light-info'>
+                        {roles.name}
+                      </span>
+                    ))}
+                  </td>
+                  <td className='text-end'>
+                    <button
+                      className='btn-icon-primary'
+                      onClick={() => {
+                        setFormInput({
+                          ...formInput,
+                          _id: todo._id,
+                          name: todo.name,
+                          role: todo.role.map((value) => value._id)
+                        })
+                        handleOpenModal()
+                      }}>
+                      <i className="fa-solid fa-pen"></i>
+                    </button>
+                    <button
+                      className='btn-icon-primary'
+                      onClick={() => handleDelete(todo._id)}
+                    >
+                      <i className="fa-solid fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
 

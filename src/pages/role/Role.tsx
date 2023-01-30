@@ -26,6 +26,7 @@ function Role() {
   const [todoLists, setTodoLists] = useState<TodoListType[]>([])
   const [errors, setErrors] = useState() as any
   const [isSubmit, setIsSubmit] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const [modal, setModal] = useState(false)
   const handleOpenModal = () => {
@@ -38,10 +39,12 @@ function Role() {
   }
 
   const dataFetch = async () => {
+    setIsLoading(true)
     axios
       .get(`/${api_url}`)
       .then(resp => setTodoLists(resp.data.data))
       .catch((err) => console.log(err.message))
+      .finally(() => setIsLoading(false))
   }
 
   useEffect(() => {
@@ -101,7 +104,7 @@ function Role() {
   return (
     <>
       <Toolbar>
-        <div className='text-capitalize float-start'>
+        <div className='text-capitalize float-start fs-5 fw-bold'>
           {PageName(pathname)}
         </div>
         <div className='float-end'>
@@ -114,38 +117,43 @@ function Role() {
         </div>
       </Toolbar>
       <div className='colunm-auto-150px'>
-        {todoLists.map((todo, index) => (
-          <div key={todo._id} className='card card-body'>
-            <div className='fs-5'>{todo.name}</div>
-            <div className='my-10'>
-              {todo.permission.map((roles, index) => (
-                <div key={index} className="blockquote-footer">
-                  {roles.name}
-                </div>
-              ))}
-            </div>
-            <div>
-              <button
-                className='btn btn-light-primary btn-sm'
-                onClick={() => {
-                  setFormInput({
-                    ...formInput,
-                    _id: todo._id,
-                    name: todo.name,
-                  })
-                  handleOpenModal()
-                }}>
-                Edit
-              </button>
-              <button
-                className='btn btn-light-danger btn-sm'
-                onClick={() => handleDelete(todo._id)}
-              >
-                Delete
-              </button>
-            </div>
+        {isLoading ?
+          <div className='text-center'>
+            <div className="spinner-border text-primary h-30px w-30px" />
           </div>
-        ))}
+          :
+          todoLists.map((todo, index) => (
+            <div key={todo._id} className='card card-body'>
+              <div className='fs-5'>{todo.name}</div>
+              <div className='my-10'>
+                {todo.permission.map((roles, index) => (
+                  <div key={index} className="blockquote-footer">
+                    {roles.name}
+                  </div>
+                ))}
+              </div>
+              <div>
+                <button
+                  className='btn btn-light-primary btn-sm'
+                  onClick={() => {
+                    setFormInput({
+                      ...formInput,
+                      _id: todo._id,
+                      name: todo.name,
+                    })
+                    handleOpenModal()
+                  }}>
+                  Edit
+                </button>
+                <button
+                  className='btn btn-light-danger btn-sm'
+                  onClick={() => handleDelete(todo._id)}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
 
 
         <Modal show={modal} onHide={handleCloseModal} size='lg'>

@@ -22,6 +22,11 @@ function TodoList() {
   const [formInput, setFormInput] = useState(initialState) as any
   const [todoLists, setTodoLists] = useState<TodoListType[]>([])
   const [errors, setErrors] = useState() as any
+  const [isSubmiting, setIsSubmiting] = useState({
+    loading: false,
+    filter: 0
+  })
+  const [isLoading, setIsLoading] = useState(false)
 
   const [modal, setModal] = useState(false)
   const handleOpenModal = () => {
@@ -34,10 +39,12 @@ function TodoList() {
   }
 
   useEffect(() => {
+    setIsLoading(true)
     axios
       .get('/todo')
       .then(resp => setTodoLists(resp.data.data))
       .catch((err) => console.log(err.message))
+      .finally(() => setIsLoading(false))
   }, [])
 
   const handleChange = (e: any) => {
@@ -47,6 +54,10 @@ function TodoList() {
   }
 
   const handleClick = async ({ _id, name, isCompleted }: TodoListType) => {
+    setIsSubmiting({
+      loading: true,
+      filter: _id
+    })
     await
       axios.put(`/todo/${_id}`, {
         name: name,
@@ -58,6 +69,10 @@ function TodoList() {
           }
         })
         .catch((e) => console.log(e))
+        .finally(() => setIsSubmiting({
+          loading: false,
+          filter: 0
+        }))
   }
 
   const handleDelete = async (id: number) => {
@@ -103,7 +118,7 @@ function TodoList() {
   return (
     <>
       <Toolbar>
-        <div className='text-capitalize float-start'>
+        <div className='text-capitalize float-start fs-5 fw-bold'>
           {PageName(pathname)}
         </div>
         <div className='float-end'>
@@ -119,7 +134,7 @@ function TodoList() {
         <table className='table'>
           <thead className='text-muted'>
             <tr>
-              <th>n#</th>
+              <th>#</th>
               <th>No</th>
               <th>Todo</th>
               <th>Is Complete</th>
@@ -127,59 +142,77 @@ function TodoList() {
             </tr>
           </thead>
           <tbody className='text-muted'>
-            {todoLists.map((todo, index) => (
-              <tr key={todo._id}>
-                <td>
-                  <div className='popup'>
-                    <span>Hover</span>
-                    <div className="popup-content">
-                      <div
-                        data-link-hover='true'
-                        onClick={() => {
-                          setFormInput({
-                            ...formInput,
-                            _id: todo._id,
-                            name: todo.name,
-                            isCompleted: todo.isCompleted
-                          })
-                          handleOpenModal()
-                        }}
-                      >edit</div>
-                      <div
-                        data-link-hover='true'
-                        onClick={() => handleDelete(todo._id)}
-                      >delete</div>
-                    </div>
+            {isLoading ?
+              <tr>
+                <td colSpan={5}>
+                  <div className='text-center'>
+                    <div className="spinner-border text-primary h-30px w-30px" />
                   </div>
                 </td>
-                <td>{index + 1}</td>
-                <td>{todo.name}</td>
-                <td>{todo.isCompleted ?
-                  <span className="badge badge-light-success transition">Completed</span>
-                  :
-                  <span className="badge badge-light-danger transition">Not complete</span>
-                }</td>
-
-                <td className='text-end'>
-                  <button
-                    className={`btn btn-secondary btn-sm me-1`}
-                    onClick={() => handleClick({
-                      _id: todo._id,
-                      name: todo.name,
-                      isCompleted: todo.isCompleted
-                    })}
-                  >{todo.isCompleted ? 'Not Yet' : 'Done'}</button>
-                </td>
               </tr>
-            ))}
+              :
+              todoLists.map((todo, index) => (
+                <tr key={todo._id}>
+                  <td>
+                    <div className='popup'>
+                      <span><i className="fa-solid fa-bars fs-4"></i></span>
+                      <div className="popup-content">
+                        <div
+                          data-link-hover='true'
+                          onClick={() => {
+                            setFormInput({
+                              ...formInput,
+                              _id: todo._id,
+                              name: todo.name,
+                              isCompleted: todo.isCompleted
+                            })
+                            handleOpenModal()
+                          }}
+                        >edit</div>
+                        <div
+                          data-link-hover='true'
+                          onClick={() => handleDelete(todo._id)}
+                        >delete</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>{index + 1}</td>
+                  <td>{todo.name}</td>
+                  <td>{todo.isCompleted ?
+                    <span className="badge badge-light-success transition">Completed</span>
+                    :
+                    <span className="badge badge-light-danger transition">Not complete</span>
+                  }</td>
+
+                  <td className='text-end'>
+                    <button
+                      className={`btn btn-secondary btn-sm me-1`}
+                      onClick={() => handleClick({
+                        _id: todo._id,
+                        name: todo.name,
+                        isCompleted: todo.isCompleted
+                      })}
+                      disabled={(todo._id === isSubmiting.filter) && isSubmiting.loading}
+                    >
+                      {(todo._id === isSubmiting.filter) && isSubmiting.loading ?
+                        <>loading...</>
+                        :
+                        todo.isCompleted ? 'Not Yet' : 'Done'
+                      }
+
+                    </button>
+                  </td>
+                </tr>
+              ))
+            }
           </tbody>
         </table>
 
         <Modal show={modal} onHide={handleCloseModal} size='lg'>
           <Modal.Header>
             <Modal.Title className='text-capitalize'>{PageName(pathname)}</Modal.Title>
-            <div className='btn btn-icon btn-sm btn-light-primary text-primary' onClick={handleCloseModal}>
-              <svg width="23" height="23" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <div className='btn btn-sm btn-light-primary' onClick={handleCloseModal}>
+              <svg width="21" height="21" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect id="time-3-icon" opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
                 <rect id="time-3-icon" x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
               </svg>

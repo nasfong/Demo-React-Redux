@@ -16,10 +16,11 @@ interface TodoListType {
     name: string
   }
   password: string
+  profileImage?: string
 }
 
 const api_url = 'administrator'
-
+console.log(process.env.REACT_APP_API_URL)
 function Administrator() {
   const { pathname } = useLocation()
 
@@ -36,6 +37,7 @@ function Administrator() {
   const [errors, setErrors] = useState() as any
   const [todoLists, setTodoLists] = useState<TodoListType[]>([])
   const [roleDropdown, setRoleDropdown] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
 
   const [modal, setModal] = useState(false)
   const handleOpenModal = () => {
@@ -48,10 +50,12 @@ function Administrator() {
   }
 
   useEffect(() => {
+    setIsLoading(true)
     axios
       .get(`/${api_url}`)
       .then(resp => setTodoLists(resp.data.data))
       .catch((err) => console.log(err.message))
+      .finally(() => setIsLoading(false))
   }, [])
 
   useOnceCall(() => {
@@ -76,7 +80,7 @@ function Administrator() {
       })
       .catch(e => console.log(e))
   }
-  
+
   const handleSubmit = async () => {
     if (formInput._id) {
       await axios
@@ -108,7 +112,7 @@ function Administrator() {
   return (
     <>
       <Toolbar>
-        <div className='text-capitalize float-start'>
+        <div className='text-capitalize float-start fs-5 fw-bold'>
           {PageName(pathname)}
         </div>
         <div className='float-end'>
@@ -130,40 +134,54 @@ function Administrator() {
             </tr>
           </thead>
           <tbody className='text-muted'>
-            {todoLists.map((todo, index) => (
-              <tr key={todo._id}>
-
-                <td>{todo.firstname} {todo.lastname}</td>
-                <td>
-                  <span className='badge badge-light-primary'>
-                    {todo.role?.name}
-                  </span>
-                </td>
-                <td className='text-end'>
-                  <button
-                    className='btn-icon-primary'
-                    onClick={() => {
-                      setFormInput({
-                        ...formInput,
-                        _id: todo._id,
-                        firstname: todo.firstname,
-                        lastname: todo.lastname,
-                        role: todo.role?._id,
-                        username: todo.username,
-                      })
-                      handleOpenModal()
-                    }}>
-                    <i className="fa-solid fa-pen"></i>
-                  </button>
-                  <button
-                    className='btn-icon-primary'
-                    onClick={() => handleDelete(todo._id)}
-                  >
-                    <i className="fa-solid fa-trash"></i>
-                  </button>
+            {isLoading ?
+              <tr>
+                <td colSpan={5}>
+                  <div className='text-center'>
+                    <div className="spinner-border text-primary h-30px w-30px" />
+                  </div>
                 </td>
               </tr>
-            ))}
+              :
+              todoLists.map((todo) => (
+                <tr key={todo._id}>
+
+                  <td>
+                    <img 
+                    src={`${process.env.REACT_APP_API_URL}${todo.profileImage}`} 
+                    className='h-30px' />
+                    {todo.firstname} {todo.lastname}
+                  </td>
+                  <td>
+                    <span className='badge badge-light-primary'>
+                      {todo.role?.name}
+                    </span>
+                  </td>
+                  <td className='text-end'>
+                    <button
+                      className='btn-icon-primary'
+                      onClick={() => {
+                        setFormInput({
+                          ...formInput,
+                          _id: todo._id,
+                          firstname: todo.firstname,
+                          lastname: todo.lastname,
+                          role: todo.role?._id,
+                          username: todo.username,
+                        })
+                        handleOpenModal()
+                      }}>
+                      <i className="fa-solid fa-pen"></i>
+                    </button>
+                    <button
+                      className='btn-icon-primary'
+                      onClick={() => handleDelete(todo._id)}
+                    >
+                      <i className="fa-solid fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
 

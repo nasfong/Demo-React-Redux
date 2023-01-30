@@ -10,10 +10,10 @@ const MenuAside = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div>
-      <div className={`sidebar-1 ${sideMenu && 'show-menu'}`}>
+      <div className={`sidebar-1 `} id='aside' >
         <div className="header">
           <h3 className='logo'>React Typescript</h3>
-          <div onClick={() => dispatch({ type: ActionKind.SIDE_MENU, payload: !sideMenu })}>
+          <div onClick={() => dispatch({ type: ActionKind.SIDE_MENU, payload: !sideMenu })} id='toggle' data-toggle='true'>
             <CgChevronDoubleLeftR className={`menu-arrow-menu ${sideMenu ? 'rotate-180' : 'active-arraow'}`} />
           </div>
         </div>

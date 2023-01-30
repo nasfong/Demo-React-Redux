@@ -1,16 +1,19 @@
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
+export interface User {
+  id: string
+  firstname: string
+  lastname: string
+  username: string
+  role?: string[]
+  profileImage?: string
+  accessToken: string
+}
+
 export interface State {
   accessToken?: string
-  user?: {
-    firstname: string
-    lastname: string
-    username: string
-    role?: string[]
-    profile?: string
-    accessToken: string
-  }
+  user?: User
 }
 interface Action {
   type: any

@@ -1,17 +1,17 @@
 html {
-  font-family: sans-serif; // 1
+  font-family: 'Roboto', sans-serif;
   text-size-adjust: 100%; // 2
   -webkit-text-size-adjust: 100%; // 2
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 body {
-  font-weight: 400 !important;
+  // font-weight: 500 !important;
   height: 100% !important;
   font-size: 13px;
   margin: 0px;
   padding: 0px;
-  font-family: Poppins, Helvetica, 'sans-serif';
+  font-family: 'Roboto', sans-serif;
   // background-color: #f5f8fa; 
   background-color: #ebe9e9;
   height: 100vh;

@@ -8,7 +8,7 @@ const Content = ({ children }: { children: React.ReactNode }) => {
   const { sideMenu, toolbar } = useGlobal()
 
   return (
-    <div className={`content-menu ${sideMenu && 'show-content'}`}>
+    <div>
       <Header />
       <div className='position-relative'>
         <div style={{ height: '80px' }} />
