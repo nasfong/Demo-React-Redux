@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { Col, Form, Row } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { redirect } from 'react-router-dom'
-import { socket } from '../../../App'
 
 const Login = () => {
   const dispatch = useDispatch()
