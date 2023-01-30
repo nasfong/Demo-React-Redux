@@ -18,7 +18,6 @@ export const GlobalState = (): {
   const initialState = {
     sideMenu: true,
     menus: [],
-    toolbar: ''
   }
 
   const [{ sideMenu, menus }, dispatch] = useReducer(reducer, initialState)

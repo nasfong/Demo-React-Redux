@@ -5,7 +5,7 @@ import Header from './Header'
 
 const Content = ({ children }: { children: React.ReactNode }) => {
 
-  const { sideMenu, toolbar } = useGlobal()
+  const { sideMenu } = useGlobal()
 
   return (
     <div>
