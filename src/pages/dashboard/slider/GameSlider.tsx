@@ -39,7 +39,7 @@ const GameSlider = () => {
   }, [])
 
   return (
-    <div className="slide-container w-75 h-400px">
+    <div className="slide-container w-100">
       {isLoading ?
         <div className="position-absolute top-50 start-50 spinner-border text-primary " />
         :

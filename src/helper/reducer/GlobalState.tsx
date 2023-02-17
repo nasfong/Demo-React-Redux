@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useReducer, createContext, useContext, useEffect } from 'react'
+import { useReducer, createContext, useContext, useEffect, useState } from 'react'
 import { ActionKind, reducer } from './reducer'
 
 export interface Menu {
@@ -22,13 +22,19 @@ export const GlobalState = (): {
 
   const [{ sideMenu, menus }, dispatch] = useReducer(reducer, initialState)
 
+  const [cooldown, setCooldown] = useState(0)
   useEffect(() => {
     axios
-      .get('/menu')
-      .then((resp) => {
-        dispatch({ type: ActionKind.MENU, payload: resp.data.data })
+    .get('/menu')
+    .then((resp) => {
+      dispatch({ type: ActionKind.MENU, payload: resp.data.data })
+      console.log('hello kon papa')
       })
-  }, [])
+    const delayDebounceFn = setTimeout(() => {
+      setCooldown(x => x + 1)
+    }, 10000)
+    return () => clearTimeout(delayDebounceFn)
+  }, [cooldown])
 
 
   return { dispatch, sideMenu, menus }
