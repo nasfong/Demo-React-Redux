@@ -94,30 +94,38 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
         </div>
 
         <section className='routes mb-auto'>
-          {menus.map((menu) => (
-            <NavLink
-              to={menu.url}
-              key={menu._id}
-              className='link'
-            >
-              <div
-                className={`icon`}
-                dangerouslySetInnerHTML={{ __html: menu.icon }}
-              />
-              <AnimatePresence>
-                {!isOpen &&
-                  <motion.div
-                    initial='hidden'
-                    animate='show'
-                    exit='hidden'
-                    variants={showAnimation}
-                    className='link_text'>
-                    {menu.name}
-                  </motion.div>
-                }
-              </AnimatePresence>
-            </NavLink>
-          ))}
+
+          {menus.length <= 0 ?
+            <div className='m-6 gap-2 d-grid'>
+              <div className='skeleton skeleton-text h-15px' />
+              <div className='skeleton skeleton-text h-15px' />
+              <div className='skeleton skeleton-text h-15px' />
+            </div>
+            :
+            menus.map((menu) => (
+              <NavLink
+                to={menu.url}
+                key={menu._id}
+                className='link'
+              >
+                <div
+                  className={`icon`}
+                  dangerouslySetInnerHTML={{ __html: menu.icon }}
+                />
+                <AnimatePresence>
+                  {!isOpen &&
+                    <motion.div
+                      initial='hidden'
+                      animate='show'
+                      exit='hidden'
+                      variants={showAnimation}
+                      className='link_text'>
+                      {menu.name}
+                    </motion.div>
+                  }
+                </AnimatePresence>
+              </NavLink>
+            ))}
         </section>
         <footer>
           <button

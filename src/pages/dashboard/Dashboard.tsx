@@ -18,8 +18,8 @@ const Dashboard = () => {
 
   return (
     <div className='m-1'>
-      <div className='row'>
-        <div className='card card-body col-6 border'>
+      <div className='d-flex flex-nowrap gap-3'>
+        <div className='card card-body'>
           <GameSlider />
         </div>
         <div className='card card-body col-6'>
