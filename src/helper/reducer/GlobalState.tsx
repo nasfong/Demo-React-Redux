@@ -30,10 +30,10 @@ export const GlobalState = (): {
       dispatch({ type: ActionKind.MENU, payload: resp.data.data })
       console.log('hello kon papa')
       })
-    const delayDebounceFn = setTimeout(() => {
-      setCooldown(x => x + 1)
-    }, 10000)
-    return () => clearTimeout(delayDebounceFn)
+    // const delayDebounceFn = setTimeout(() => {
+    //   setCooldown(x => x + 1)
+    // }, 10000)
+    // return () => clearTimeout(delayDebounceFn)
   }, [cooldown])
 
 

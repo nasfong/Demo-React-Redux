@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [react()],
   define: {
     'process.env': {
-      REACT_APP_API_URL: 'https://api-backend-wwx3.onrender.com'
+      REACT_APP_API_URL: 'https://express-api-0xd1.onrender.com'
       // REACT_APP_API_URL: 'http://localhost:8000'
     }
   }

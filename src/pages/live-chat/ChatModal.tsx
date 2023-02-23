@@ -4,11 +4,11 @@ import { Form, InputGroup, Modal } from 'react-bootstrap'
 import { shallowEqual, useSelector } from 'react-redux'
 import { State, User } from '../../helper/redux/AuthRedux'
 import { RootState } from '../../helper/redux/RootReducer'
-import { io } from 'socket.io-client'
 import useOnceCall from '../../util/UseOnecall'
 import { ChatItem } from './components/ChatItem'
-// import { socket } from '../../App'
+import { socket } from '../../App'
 import { OnlineCheck } from '../../helper/reducer/GlobalActivity'
+
 
 
 type Props = {
@@ -53,16 +53,16 @@ const ChatModal = ({ showModal, setShowModal }: Props) => {
     }, 500)
   }, showModal)
 
-  // useEffect(() => {
-  //   socket.on('recv_message', (data) => {
-  //     dataFetch()
-  //     const delayDebounceFn = setTimeout(() => {
-  //       scrollRef.current?.scrollIntoView({ behavior: 'smooth' })
-  //     }, 500)
-  //     return () => clearTimeout(delayDebounceFn)
-  //   })
+  useEffect(() => {
+    socket.on('recv_message', (data) => {
+      dataFetch()
+      const delayDebounceFn = setTimeout(() => {
+        scrollRef.current?.scrollIntoView({ behavior: 'smooth' })
+      }, 500)
+      return () => clearTimeout(delayDebounceFn)
+    })
 
-  // }, [socket])
+  }, [socket])
 
   const handleCloseModal = () => setShowModal(!showModal)
 
@@ -71,9 +71,9 @@ const ChatModal = ({ showModal, setShowModal }: Props) => {
       name: message,
       user: user?.id
     }).then((resp) => {
-      // if (resp.status === 200) {
-      //   socket.emit('send_message', resp.data.data)
-      // }
+      if (resp.status === 200) {
+        socket.emit('send_message', resp.data.data)
+      }
       setMessage('')
     }).catch((err) => console.log(err))
   }
@@ -85,9 +85,9 @@ const ChatModal = ({ showModal, setShowModal }: Props) => {
         name: message,
         user: user?.id
       }).then((resp) => {
-        // if (resp.status === 200) {
-        //   socket.emit('send_message', resp.data.data)
-        // }
+        if (resp.status === 200) {
+          socket.emit('send_message', resp.data.data)
+        }
         setMessage('')
       }).catch((err) => console.log(err))
       setMessage('')
