@@ -14,10 +14,8 @@ import Chat from './pages/live-chat/Chat';
 import { io } from 'socket.io-client';
 import { GlobalActivity } from './helper/reducer/GlobalActivity';
 
-export const socket = io(`${process.env.REACT_APP_API_URL}`)
-// export const socket = io(`${process.env.REACT_APP_API_URL}`, {
-//   path: '123'
-// });
+// export const socket = io(`${process.env.REACT_APP_API_URL}`)
+
 function App() {
   const { user, accessToken } = useSelector<RootState>(({ auth }) => auth, shallowEqual) as State
 

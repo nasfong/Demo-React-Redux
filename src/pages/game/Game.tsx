@@ -125,7 +125,7 @@ const Game = () => {
         handleCloseModal2()
       })
   }
-  
+
   //Submit
   const handleSubmit = () => {
     setIsSubmit(true)
@@ -302,8 +302,7 @@ const Game = () => {
                 defaultValue={formInput.name}
                 onChange={handleChange}
                 isInvalid={!!errors?.name}
-                // className={!errors?.name && `form-control-solid`}
-                className={`form-control-solid`}
+                className={errors?.name ? '' : 'form-control-solid'}
                 placeholder='image-name'
               />
               <Form.Control.Feedback type='invalid'>{errors?.name?.message}</Form.Control.Feedback>

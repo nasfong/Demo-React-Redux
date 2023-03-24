@@ -19,14 +19,13 @@ const Dashboard = () => {
   return (
     <div className='m-1'>
       <div className='d-flex flex-nowrap gap-3'>
-        <div className='card card-body'>
+        <div className='card card-body min-h-400px w-50'>
           <GameSlider />
         </div>
         <div className='card card-body col-6'>
           {/* <Chart1 /> */}
         </div>
       </div>
-
     </div>
   )
 }

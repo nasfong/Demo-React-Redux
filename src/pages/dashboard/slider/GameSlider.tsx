@@ -15,7 +15,8 @@ const zoomOutProperties = {
   infinite: true,
   indicators: false,
   scale: 0.4,
-  arrows: false
+  arrows: false,
+  pauseOnHover: false
 };
 
 const no_image = '/images/noImage.jpg'
@@ -39,16 +40,14 @@ const GameSlider = () => {
   }, [])
 
   return (
-    <div className="slide-container w-100">
+    <div>
       {isLoading ?
         <div className="position-absolute top-50 start-50 spinner-border text-primary " />
         :
         <Fade {...zoomOutProperties}>
           {games.map((game, index) => (
             <div className="each-fade " key={index}>
-              <div className="image-container">
-                <img src={game.image} className='img-dash' />
-              </div>
+              <img src={game.image} className='img-dash' />
               <h2 className='text-center'>{game.name}</h2>
             </div>
           ))}
